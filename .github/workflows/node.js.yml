@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Generate Static Site🛠
         run: |
-         npm install --save --legacy-peer-deps
+         npm install --save --force
          webpack --bail
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
