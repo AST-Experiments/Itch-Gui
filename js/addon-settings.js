@@ -404,13 +404,13 @@ module.exports = function escape(url) {
 "use strict";
 
 var token = '%[a-f0-9]{2}';
-var singleMatcher = new RegExp(token, 'gi');
+var singleMatcher = new RegExp('(' + token + ')|([^%]+?)', 'gi');
 var multiMatcher = new RegExp('(' + token + ')+', 'gi');
 
 function decodeComponents(components, split) {
 	try {
 		// Try to decode the entire string first
-		return decodeURIComponent(components.join(''));
+		return [decodeURIComponent(components.join(''))];
 	} catch (err) {
 		// Do nothing
 	}
@@ -432,12 +432,12 @@ function decode(input) {
 	try {
 		return decodeURIComponent(input);
 	} catch (err) {
-		var tokens = input.match(singleMatcher);
+		var tokens = input.match(singleMatcher) || [];
 
 		for (var i = 1; i < tokens.length; i++) {
 			input = decodeComponents(tokens, i).join('');
 
-			tokens = input.match(singleMatcher);
+			tokens = input.match(singleMatcher) || [];
 		}
 
 		return input;
@@ -930,12 +930,10 @@ module.exports = JSON.parse("{\"cat-blocks/@description\":\"Bir Nisan Şaka Gün
 __webpack_require__.r(__webpack_exports__);
 let changeChannel;
 let reloadChannel;
-
 if (typeof BroadcastChannel !== 'undefined') {
   changeChannel = new BroadcastChannel('addons-change');
   reloadChannel = new BroadcastChannel('addons-reload');
 }
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   changeChannel,
   reloadChannel
@@ -980,24 +978,20 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports) {
 
 /* eslint-disable no-extend-native */
+
 if (!Blob.prototype.text) {
   Blob.prototype.text = function () {
     return new Promise((resolve, reject) => {
       const fr = new FileReader();
-
       fr.onload = () => resolve(fr.result);
-
       fr.onerror = () => reject(new Error('Cannot read blob as text'));
-
       fr.readAsText(this);
     });
   };
 }
-
 if (!Array.prototype.flat) {
   Array.prototype.flat = function (depth = 1) {
     const result = [];
-
     for (const i of this) {
       if (Array.isArray(i)) {
         if (depth < 1) {
@@ -1011,11 +1005,9 @@ if (!Array.prototype.flat) {
         result.push(i);
       }
     }
-
     return result;
   };
 }
-
 if (typeof queueMicrotask !== 'function') {
   window.queueMicrotask = callback => {
     Promise.resolve().then(callback);
@@ -1125,13 +1117,11 @@ __webpack_require__.r(__webpack_exports__);
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 const normalize = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/['"()\-+,./[\]]/g, ' ').trim();
-
 const splitToWords = text => normalize(text).split(' ').filter(i => i);
-
 const parseTexts = texts => {
   const result = [];
-
   for (const {
     score,
     text
@@ -1141,60 +1131,45 @@ const parseTexts = texts => {
       words: splitToWords(text)
     });
   }
-
   return result;
 };
-
 class Search {
   constructor(texts) {
     this.items = texts.map(parseTexts);
   }
-
   search(query) {
     const terms = splitToWords(query);
     const result = [];
-
     const processItem = item => {
       let totalScore = 0;
-
       for (const term of terms) {
         let highestScoreForTerm = 0;
-
         for (const group of item) {
           for (const word of group.words) {
             const wordIndex = word.indexOf(term);
-
             if (wordIndex !== -1) {
               let multiplier;
-
               if (wordIndex === 0) {
                 multiplier = 1.5;
               } else {
                 multiplier = 1;
               }
-
               const itemScore = group.score * multiplier;
-
               if (itemScore > highestScoreForTerm) {
                 highestScoreForTerm = itemScore;
               }
             }
           }
         }
-
         if (highestScoreForTerm === 0) {
           return;
         }
-
         totalScore += highestScoreForTerm;
       }
-
       return totalScore;
     };
-
     for (let i = 0; i < this.items.length; i++) {
       const score = processItem(this.items[i]);
-
       if (score > 0) {
         result.push({
           index: i,
@@ -1202,13 +1177,10 @@ class Search {
         });
       }
     }
-
     result.sort((a, b) => b.score - a.score);
     return result;
   }
-
 }
-
 /* harmony default export */ __webpack_exports__["default"] = (Search);
 
 /***/ }),
@@ -1299,19 +1271,12 @@ var _generated_upstream_meta_json__WEBPACK_IMPORTED_MODULE_8___namespace = /*#__
 /* harmony import */ var _lib_normalize_css__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../lib/normalize.css */ "./src/lib/normalize.css");
 /* harmony import */ var _lib_normalize_css__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(_lib_normalize_css__WEBPACK_IMPORTED_MODULE_20__);
 const _excluded = ["onChange", "value"];
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
 /**
  * Copyright (C) 2021 Thomas Weber
  *
@@ -1348,38 +1313,31 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
+
 /* eslint-disable no-alert */
-
 /* eslint-disable no-console */
-
 /* eslint-disable react/no-multi-comp */
-
 /* eslint-disable react/jsx-no-bind */
 
 const locale = Object(_lib_detect_locale__WEBPACK_IMPORTED_MODULE_9__["detectLocale"])(Object.keys(_generated_l10n_settings_entries__WEBPACK_IMPORTED_MODULE_5__["default"]));
 document.documentElement.lang = locale;
 const addonTranslations = _generated_l10n_settings_entries__WEBPACK_IMPORTED_MODULE_5__["default"][locale] ? _generated_l10n_settings_entries__WEBPACK_IMPORTED_MODULE_5__["default"][locale]() : {};
 const settingsTranslations = _en_json__WEBPACK_IMPORTED_MODULE_6__;
-
 if (locale !== 'en') {
   const messages = _translations_json__WEBPACK_IMPORTED_MODULE_7__[locale] || _translations_json__WEBPACK_IMPORTED_MODULE_7__[locale.split('-')[0]];
-
   if (messages) {
     Object.assign(settingsTranslations, messages);
   }
 }
-
 document.title = "".concat(settingsTranslations.title, " - Itch");
 const theme = Object(_lib_tw_theme_hoc_jsx__WEBPACK_IMPORTED_MODULE_10__["getInitialDarkMode"])() ? 'dark' : 'light';
 document.body.setAttribute('theme', theme);
-
 let _throttleTimeout;
-
 const postThrottledSettingsChange = store => {
   if (_throttleTimeout) {
     clearTimeout(_throttleTimeout);
   }
-
   _throttleTimeout = setTimeout(() => {
     _channels__WEBPACK_IMPORTED_MODULE_12__["default"].changeChannel.postMessage({
       version: _generated_upstream_meta_json__WEBPACK_IMPORTED_MODULE_8__.commit,
@@ -1387,11 +1345,9 @@ const postThrottledSettingsChange = store => {
     });
   }, 100);
 };
-
 const filterAddonsBySupport = () => {
   const supported = {};
   const unsupported = {};
-
   for (const [id, manifest] of Object.entries(_generated_addon_manifests__WEBPACK_IMPORTED_MODULE_4__["default"])) {
     if (manifest.unsupported) {
       unsupported[id] = manifest;
@@ -1399,18 +1355,15 @@ const filterAddonsBySupport = () => {
       supported[id] = manifest;
     }
   }
-
   return {
     supported,
     unsupported
   };
 };
-
 const {
   supported: supportedAddons,
   unsupported: unsupportedAddons
 } = filterAddonsBySupport();
-
 const groupAddons = () => {
   const groups = {
     new: {
@@ -1430,10 +1383,8 @@ const groupAddons = () => {
     }
   };
   const manifests = Object.values(supportedAddons);
-
   for (let index = 0; index < manifests.length; index++) {
     const manifest = manifests[index];
-
     if (manifest.tags.includes('new')) {
       groups.new.addons.push(index);
     } else if (manifest.tags.includes('danger') || manifest.noCompiler) {
@@ -1442,12 +1393,9 @@ const groupAddons = () => {
       groups.others.addons.push(index);
     }
   }
-
   return groups;
 };
-
 const groupedAddons = groupAddons();
-
 const CreditList = ({
   credits
 }) => credits.map((author, index) => {
@@ -1461,21 +1409,18 @@ const CreditList = ({
     rel: "noreferrer"
   }, author.name) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, author.name), isLast ? null : ', ');
 });
-
 CreditList.propTypes = {
   credits: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
     name: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
     link: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
   }))
 };
-
 const Switch = _ref => {
   let {
-    onChange,
-    value
-  } = _ref,
-      props = _objectWithoutProperties(_ref, _excluded);
-
+      onChange,
+      value
+    } = _ref,
+    props = _objectWithoutProperties(_ref, _excluded);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", _extends({
     className: _settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.switch,
     state: value ? 'on' : 'off',
@@ -1485,12 +1430,10 @@ const Switch = _ref => {
     onClick: () => onChange(!value)
   }, props));
 };
-
 Switch.propTypes = {
   onChange: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
   value: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool
 };
-
 const Select = ({
   onChange,
   value,
@@ -1508,7 +1451,6 @@ const Select = ({
     })
   }, potentialValue.name);
 }));
-
 Select.propTypes = {
   onChange: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
   value: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
@@ -1517,7 +1459,6 @@ Select.propTypes = {
     name: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
   }))
 };
-
 const Tags = ({
   manifest
 }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
@@ -1533,13 +1474,11 @@ const Tags = ({
 }, settingsTranslations.tagNew), manifest.tags.includes('danger') && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
   className: classnames__WEBPACK_IMPORTED_MODULE_2___default()(_settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.tag, _settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.tagDanger)
 }, settingsTranslations.tagDanger));
-
 Tags.propTypes = {
   manifest: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
     tags: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string.isRequired).isRequired
   }).isRequired
 };
-
 class TextInput extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
@@ -1552,29 +1491,24 @@ class TextInput extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       focused: false
     };
   }
-
   handleKeyPress(e) {
     if (e.key === 'Enter') {
       this.handleFlush(e);
       e.target.blur();
     }
   }
-
   handleFocus() {
     this.setState({
       focused: true
     });
   }
-
   handleFlush(e) {
     this.setState({
       focused: false
     });
-
     if (this.state.value === null) {
       return;
     }
-
     if (this.props.type === 'number') {
       let value = +this.state.value;
       const min = e.target.min;
@@ -1587,12 +1521,10 @@ class TextInput extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     } else {
       this.props.onChange(this.state.value);
     }
-
     this.setState({
       value: null
     });
   }
-
   handleChange(e) {
     e.persist();
     this.setState({
@@ -1604,7 +1536,6 @@ class TextInput extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       }
     });
   }
-
   render() {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", _extends({}, this.props, {
       value: this.state.value === null ? this.props.value : this.state.value,
@@ -1614,15 +1545,12 @@ class TextInput extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       onKeyPress: this.handleKeyPress
     }));
   }
-
 }
-
 TextInput.propTypes = {
   onChange: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func.isRequired,
   type: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
   value: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number])
 };
-
 const ResetButton = ({
   addonId,
   settingId,
@@ -1636,13 +1564,11 @@ const ResetButton = ({
   src: _undo_svg__WEBPACK_IMPORTED_MODULE_15___default.a,
   alt: settingsTranslations.reset
 }));
-
 ResetButton.propTypes = {
   addonId: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
   settingId: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
   forTextInput: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool
 };
-
 const Setting = ({
   addonId,
   setting,
@@ -1650,14 +1576,12 @@ const Setting = ({
 }) => {
   if (setting.if && setting.if.addonEnabled) {
     const addons = Array.isArray(setting.if.addonEnabled) ? setting.if.addonEnabled : [setting.if.addonEnabled];
-
     for (const addon of addons) {
       if (!_settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].getAddonEnabled(addon)) {
         return null;
       }
     }
   }
-
   if (setting.if && setting.if.settings) {
     for (const [settingName, expectedValue] of Object.entries(setting.if.settings)) {
       if (_settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].getAddonSetting(addonId, settingName) !== expectedValue) {
@@ -1665,7 +1589,6 @@ const Setting = ({
       }
     }
   }
-
   const settingId = setting.id;
   const settingName = addonTranslations["".concat(addonId, "/@settings-name-").concat(settingId)] || setting.name;
   const uniqueId = "setting/".concat(addonId, "/").concat(settingId);
@@ -1713,7 +1636,6 @@ const Setting = ({
     setting: setting
   })));
 };
-
 Setting.propTypes = {
   addonId: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
   setting: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
@@ -1735,7 +1657,6 @@ Setting.propTypes = {
   }),
   value: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number])
 };
-
 const Notice = ({
   type,
   text
@@ -1748,12 +1669,10 @@ const Notice = ({
   alt: "",
   draggable: false
 })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, text));
-
 Notice.propTypes = {
   type: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
   text: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
 };
-
 const Presets = ({
   addonId,
   presets
@@ -1772,7 +1691,6 @@ const Presets = ({
     onClick: () => _settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].applyAddonPreset(addonId, presetId)
   }, name);
 }));
-
 Presets.propTypes = {
   addonId: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
   presets: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
@@ -1782,7 +1700,6 @@ Presets.propTypes = {
     values: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({})
   }))
 };
-
 const Addon = ({
   id,
   settings,
@@ -1862,7 +1779,6 @@ const Addon = ({
   addonId: id,
   presets: manifest.presets
 }))));
-
 Addon.propTypes = {
   id: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
   settings: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
@@ -1885,7 +1801,6 @@ Addon.propTypes = {
   }),
   extended: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool
 };
-
 const Dirty = props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
   className: _settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.dirtyOuter
 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1894,11 +1809,9 @@ const Dirty = props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a
   className: classnames__WEBPACK_IMPORTED_MODULE_2___default()(_settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.button, _settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.dirtyButton),
   onClick: props.onReloadNow
 }, settingsTranslations.dirtyButton)));
-
 Dirty.propTypes = {
   onReloadNow: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func
 };
-
 const UnsupportedAddons = ({
   addons: addonList
 }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1912,7 +1825,6 @@ const UnsupportedAddons = ({
   key: id,
   className: _settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.unsupportedAddon
 }, addonTranslations["".concat(id, "/@name")] || manifest.name, index !== addonList.length - 1 && ', ')));
-
 UnsupportedAddons.propTypes = {
   addons: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
     id: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
@@ -1921,7 +1833,6 @@ UnsupportedAddons.propTypes = {
     })
   }))
 };
-
 const InternalAddonList = ({
   addons,
   extended
@@ -1936,7 +1847,6 @@ const InternalAddonList = ({
   manifest: manifest,
   extended: extended
 }));
-
 class AddonGroup extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
@@ -1944,12 +1854,10 @@ class AddonGroup extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
       open: props.open
     };
   }
-
   render() {
     if (this.props.addons.length === 0) {
       return null;
     }
-
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: _settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.addonGroup
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -1969,9 +1877,7 @@ class AddonGroup extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
       extended: this.props.extended
     }));
   }
-
 }
-
 AddonGroup.propTypes = {
   label: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
   open: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
@@ -1982,13 +1888,11 @@ AddonGroup.propTypes = {
   })).isRequired,
   extended: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool.isRequired
 };
-
 const addonToSearchItem = ({
   id,
   manifest
 }) => {
   const texts = new Set();
-
   const addText = (score, text) => {
     if (text) {
       texts.add({
@@ -1997,20 +1901,17 @@ const addonToSearchItem = ({
       });
     }
   };
-
   addText(1, id);
   addText(1, manifest.name);
   addText(1, addonTranslations["".concat(id, "/@name")]);
   addText(0.5, manifest.description);
   addText(0.5, addonTranslations["".concat(id, "/@description")]);
-
   if (manifest.settings) {
     for (const setting of manifest.settings) {
       addText(0.25, setting.name);
       addText(0.25, addonTranslations["".concat(id, "/@settings-name-").concat(setting.id)]);
     }
   }
-
   if (manifest.presets) {
     for (const preset of manifest.presets) {
       addText(0.1, preset.name);
@@ -2019,50 +1920,41 @@ const addonToSearchItem = ({
       addText(0.1, addonTranslations["".concat(id, "/@preset-description-").concat(preset.id)]);
     }
   }
-
   for (const tag of manifest.tags) {
     const key = "tags.".concat(tag);
-
     if (settingsTranslations[key]) {
       addText(0.25, settingsTranslations[key]);
     }
   }
-
   if (manifest.info) {
     for (const info of manifest.info) {
       addText(0.25, info.text);
       addText(0.25, addonTranslations["".concat(id, "/@info-").concat(info.id)]);
     }
   }
-
   return texts;
 };
-
 class AddonList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.search = new _search__WEBPACK_IMPORTED_MODULE_3__["default"](this.props.addons.map(addonToSearchItem));
     this.groups = [];
   }
-
   render() {
     if (this.props.search) {
       const addons = this.search.search(this.props.search).slice(0, 20).map(({
         index
       }) => this.props.addons[index]);
-
       if (addons.length === 0) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: _settings_css__WEBPACK_IMPORTED_MODULE_18___default.a.noResults
         }, settingsTranslations.noResults);
       }
-
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(InternalAddonList, {
         addons: addons,
         extended: this.props.extended
       }));
     }
-
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, Object.entries(groupedAddons).map(([id, {
       label,
       addons,
@@ -2075,9 +1967,7 @@ class AddonList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       extended: this.props.extended
     })));
   }
-
 }
-
 AddonList.propTypes = {
   addons: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
     id: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string.isRequired,
@@ -2087,7 +1977,6 @@ AddonList.propTypes = {
   search: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string.isRequired,
   extended: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool.isRequired
 };
-
 class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
@@ -2108,7 +1997,6 @@ class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.
       search: location.hash ? location.hash.substr(1) : '',
       extended: false
     }, this.readFullAddonState());
-
     if (_channels__WEBPACK_IMPORTED_MODULE_12__["default"].changeChannel) {
       _channels__WEBPACK_IMPORTED_MODULE_12__["default"].changeChannel.addEventListener('message', () => {
         _settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].readLocalStorage();
@@ -2116,46 +2004,38 @@ class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.
       });
     }
   }
-
   componentDidMount() {
     _settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].addEventListener('setting-changed', this.handleSettingStoreChanged);
     document.body.addEventListener('keydown', this.handleKeyDown);
   }
-
   componentWillUnmount() {
     _settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].removeEventListener('setting-changed', this.handleSettingStoreChanged);
     document.body.removeEventListener('keydown', this.handleKeyDown);
   }
-
   readFullAddonState() {
     const result = {};
-
     for (const [id, manifest] of Object.entries(supportedAddons)) {
       const enabled = _settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].getAddonEnabled(id);
       const addonState = {
         enabled: enabled,
         dirty: false
       };
-
       if (manifest.settings) {
         for (const setting of manifest.settings) {
           addonState[setting.id] = _settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].getAddonSetting(id, setting.id);
         }
       }
-
       result[id] = addonState;
     }
-
     return result;
   }
-
   handleSettingStoreChanged(e) {
     const {
       addonId,
       settingId,
       value
-    } = e.detail; // If channels are unavailable, every change requires reload.
-
+    } = e.detail;
+    // If channels are unavailable, every change requires reload.
     const reloadRequired = e.detail.reloadRequired || !_channels__WEBPACK_IMPORTED_MODULE_12__["default"].changeChannel;
     this.setState(state => {
       const newState = {
@@ -2164,26 +2044,21 @@ class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.
           dirty: true
         })
       };
-
       if (reloadRequired) {
         newState.dirty = true;
       }
-
       return newState;
     });
-
     if (!reloadRequired) {
       postThrottledSettingsChange(_settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].store);
     }
   }
-
   handleReloadNow() {
     // Value posted does not matter
     _channels__WEBPACK_IMPORTED_MODULE_12__["default"].reloadChannel.postMessage(0);
     this.setState({
       dirty: false
     });
-
     for (const addonId of Object.keys(supportedAddons)) {
       if (this.state[addonId].dirty) {
         this.setState(state => ({
@@ -2194,7 +2069,6 @@ class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.
       }
     }
   }
-
   handleResetAll() {
     if (confirm(settingsTranslations.confirmResetAll)) {
       _settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].resetAllAddons();
@@ -2203,14 +2077,12 @@ class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.
       });
     }
   }
-
   handleExport() {
     const exportedData = _settings_store_singleton__WEBPACK_IMPORTED_MODULE_11__["default"].export({
       theme
     });
     this.props.onExportSettings(exportedData);
   }
-
   handleImport() {
     const fileSelector = document.createElement('input');
     fileSelector.type = 'file';
@@ -2220,11 +2092,9 @@ class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.
     document.body.removeChild(fileSelector);
     fileSelector.addEventListener('change', async () => {
       const file = fileSelector.files[0];
-
       if (!file) {
         return;
       }
-
       try {
         const text = await file.text();
         const data = JSON.parse(text);
@@ -2238,46 +2108,38 @@ class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.
       }
     });
   }
-
   handleSearch(e) {
     const value = e.target.value;
     this.setState({
       search: value
     });
   }
-
   handleClickSearchButton() {
     this.setState({
       search: ''
     });
     this.searchBar.focus();
   }
-
   handleClickVersion() {
     this.setState({
       extended: !this.state.extended
     });
   }
-
   searchRef(searchBar) {
     this.searchBar = searchBar;
   }
-
   handleKeyDown(e) {
     const key = e.key;
-
     if (key.length === 1 && key !== ' ' && e.target === document.body && !(e.ctrlKey || e.metaKey || e.altKey)) {
       this.searchBar.focus();
-    } // Only preventDefault() if the search bar isn't already focused so
+    }
+    // Only preventDefault() if the search bar isn't already focused so
     // that we don't break the browser's builtin ctrl+f
-
-
     if (key === 'f' && (e.ctrlKey || e.metaKey) && document.activeElement !== this.searchBar) {
       this.searchBar.focus();
       e.preventDefault();
     }
   }
-
   render() {
     const addonState = Object.entries(supportedAddons).map(([id, manifest]) => ({
       id,
@@ -2347,9 +2209,7 @@ class AddonSettingsComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.
     // eslint-disable-next-line max-len
     "You have enabled debug mode. (Addons version ".concat(_generated_upstream_meta_json__WEBPACK_IMPORTED_MODULE_8__.commit, ")") : "Addons version ".concat(_generated_upstream_meta_json__WEBPACK_IMPORTED_MODULE_8__.commit))))));
   }
-
 }
-
 AddonSettingsComponent.propTypes = {
   onExportSettings: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func
 };
@@ -2396,60 +2256,50 @@ __webpack_require__.r(__webpack_exports__);
  * @fileoverview
  * Utility function to detect locale from the browser setting or paramenter on the URL.
  */
- // tw: read language from localStorage
 
+
+
+// tw: read language from localStorage
 const LANGUAGE_KEY = 'tw:language';
+
 /**
  * look for language setting in the browser. Check against supported locales.
  * If there's a parameter in the URL, override the browser setting
  * @param {Array.string} supportedLocales An array of supported locale codes.
  * @return {string} the preferred locale
  */
-
 const detectLocale = supportedLocales => {
   // tw: read language from localStorage
   try {
     const storedLanguage = localStorage.getItem(LANGUAGE_KEY);
-
     if (storedLanguage && supportedLocales.includes(storedLanguage)) {
       return storedLanguage;
     }
-  } catch (e) {
-    /* ignore */
-  }
-
+  } catch (e) {/* ignore */}
   let locale = 'en'; // default
-
   let browserLocale = window.navigator.userLanguage || window.navigator.language;
-  browserLocale = browserLocale.toLowerCase(); // try to set locale from browserLocale
-
+  browserLocale = browserLocale.toLowerCase();
+  // try to set locale from browserLocale
   if (supportedLocales.includes(browserLocale)) {
     locale = browserLocale;
   } else {
     browserLocale = browserLocale.split('-')[0];
-
     if (supportedLocales.includes(browserLocale)) {
       locale = browserLocale;
     }
   }
-
-  const queryParams = query_string__WEBPACK_IMPORTED_MODULE_0___default.a.parse(location.search); // Flatten potential arrays and remove falsy values
-
+  const queryParams = query_string__WEBPACK_IMPORTED_MODULE_0___default.a.parse(location.search);
+  // Flatten potential arrays and remove falsy values
   const potentialLocales = [].concat(queryParams.locale, queryParams.lang).filter(l => l);
-
   if (!potentialLocales.length) {
     return locale;
   }
-
   const urlLocale = potentialLocales[0].toLowerCase();
-
   if (supportedLocales.includes(urlLocale)) {
     return urlLocale;
   }
-
   return locale;
 };
-
 
 
 /***/ }),
@@ -2465,20 +2315,20 @@ const detectLocale = supportedLocales => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ((filename, blob) => {
   const downloadLink = document.createElement('a');
-  document.body.appendChild(downloadLink); // Use special ms version if available to get it working on Edge.
+  document.body.appendChild(downloadLink);
 
+  // Use special ms version if available to get it working on Edge.
   if (navigator.msSaveOrOpenBlob) {
     navigator.msSaveOrOpenBlob(blob, filename);
     return;
   }
-
   if ('download' in HTMLAnchorElement.prototype) {
     const url = window.URL.createObjectURL(blob);
     downloadLink.href = url;
     downloadLink.download = filename;
     downloadLink.type = blob.type;
-    downloadLink.click(); // remove the link after a timeout to prevent a crash on iOS 13 Safari
-
+    downloadLink.click();
+    // remove the link after a timeout to prevent a crash on iOS 13 Safari
     window.setTimeout(() => {
       document.body.removeChild(downloadLink);
       window.URL.revokeObjectURL(url);
@@ -2487,12 +2337,10 @@ __webpack_require__.r(__webpack_exports__);
     // iOS 12 Safari, open a new page and set href to data-uri
     let popup = window.open('', '_blank');
     const reader = new FileReader();
-
     reader.onloadend = function () {
       popup.location.href = reader.result;
       popup = null;
     };
-
     reader.readAsDataURL(blob);
   }
 });
@@ -2547,24 +2395,21 @@ __webpack_require__.r(__webpack_exports__);
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 
-
 const THEME_KEY = 'tw:theme';
 const darkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 const getInitialDarkMode = () => {
   try {
     const item = localStorage.getItem(THEME_KEY);
-
     if (item !== null) {
       return item === 'dark';
     }
-  } catch (e) {// ignore
+  } catch (e) {
+    // ignore
   }
-
   return darkMediaQuery.matches;
 };
 const darkModeStylesheet = document.createElement('style');
 darkModeStylesheet.textContent = _raw_loader_tw_theme_dark_css__WEBPACK_IMPORTED_MODULE_1___default.a;
-
 const ThemeHOC = function ThemeHOC(WrappedComponent) {
   class ThemeComponent extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     constructor(props) {
@@ -2575,67 +2420,55 @@ const ThemeHOC = function ThemeHOC(WrappedComponent) {
         dark: getInitialDarkMode()
       };
     }
-
     componentDidMount() {
       // media query does not have listeners in legacy edge
       if (darkMediaQuery.addEventListener) {
         darkMediaQuery.addEventListener('change', this.handleQueryChange);
       }
-
       this.updateDark();
     }
-
     componentDidUpdate() {
       try {
         localStorage.setItem(THEME_KEY, this.state.dark ? 'dark' : 'light');
-      } catch (e) {// ignore
+      } catch (e) {
+        // ignore
       }
-
       this.updateDark();
     }
-
     componentWillUnmount() {
       // media query does not have listeners in legacy edge
       if (darkMediaQuery.removeEventListener) {
         darkMediaQuery.removeEventListener('change', this.handleQueryChange);
       }
     }
-
     updateDark() {
       const dark = this.state.dark;
       document.body.setAttribute('theme', dark ? 'dark' : 'light');
-
       if (dark && !darkModeStylesheet.parentNode) {
         document.body.insertBefore(darkModeStylesheet, document.body.firstChild);
       } else if (!dark && darkModeStylesheet.parentNode) {
         darkModeStylesheet.parentNode.removeChild(darkModeStylesheet);
       }
     }
-
     handleQueryChange() {
       this.setState({
         dark: darkMediaQuery.matches
       });
     }
-
     handleClickTheme() {
       this.setState(state => ({
         dark: !state.dark
       }));
     }
-
     render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WrappedComponent, _extends({
         onClickTheme: this.handleClickTheme,
         isDark: this.state.dark
       }, this.props));
     }
-
   }
-
   return ThemeComponent;
 };
-
 
 
 /***/ }),
@@ -2681,7 +2514,6 @@ const onExportSettings = settings => {
   const blob = new Blob([JSON.stringify(settings)]);
   Object(_lib_download_blob_js__WEBPACK_IMPORTED_MODULE_2__["default"])('turbowarp-addon-settings.json', blob);
 };
-
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_addons_settings_settings_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
   onExportSettings: onExportSettings
 }), _app_target__WEBPACK_IMPORTED_MODULE_4__["default"]);
@@ -2697,12 +2529,12 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEB
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-const appTarget = document.getElementById('app'); // Remove everything from the target to fix macOS Safari "Save Page As",
+const appTarget = document.getElementById('app');
 
+// Remove everything from the target to fix macOS Safari "Save Page As",
 while (appTarget.firstChild) {
   appTarget.removeChild(appTarget.firstChild);
 }
-
 document.body.classList.add('tw-loaded');
 /* harmony default export */ __webpack_exports__["default"] = (appTarget);
 

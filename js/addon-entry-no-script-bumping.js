@@ -34,7 +34,6 @@ __webpack_require__.r(__webpack_exports__);
 }) {
   const ScratchBlocks = await addon.tab.traps.getBlockly();
   const originalBumpNeighbors = ScratchBlocks.BlockSvg.prototype.bumpNeighbours_;
-
   ScratchBlocks.BlockSvg.prototype.bumpNeighbours_ = function () {
     if (addon.self.disabled) {
       originalBumpNeighbors.call(this);

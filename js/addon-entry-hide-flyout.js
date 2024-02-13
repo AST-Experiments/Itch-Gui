@@ -80,13 +80,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _url_loader_lock_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! url-loader!./lock.svg */ "./node_modules/url-loader/dist/cjs.js!./src/addons/addons/hide-flyout/lock.svg");
 /* harmony import */ var _url_loader_unlock_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! url-loader!./unlock.svg */ "./node_modules/url-loader/dist/cjs.js!./src/addons/addons/hide-flyout/unlock.svg");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 /* inserted by pull.js */
-
 
 
 const _twGetAsset = path => {
@@ -94,7 +90,6 @@ const _twGetAsset = path => {
   if (path === "/unlock.svg") return _url_loader_unlock_svg__WEBPACK_IMPORTED_MODULE_1__["default"];
   throw new Error("Unknown asset: ".concat(path));
 };
-
 /* harmony default export */ __webpack_exports__["default"] = (async function ({
   addon,
   global,
@@ -113,7 +108,6 @@ const _twGetAsset = path => {
   let scrollAnimation = true;
   const SVG_NS = "http://www.w3.org/2000/svg";
   const Blockly = await addon.tab.traps.getBlockly();
-
   const updateCSSVariables = () => {
     const mode = getToggleSetting();
     const modeToLockDisplay = {
@@ -129,10 +123,8 @@ const _twGetAsset = path => {
     };
     document.documentElement.style.setProperty('--hideFlyout-placeholderDisplay', modeToPlaceholderDisplay[mode]);
   };
-
   addon.settings.addEventListener("change", updateCSSVariables);
   updateCSSVariables();
-
   function getSpeedValue() {
     let data = {
       none: "0",
@@ -142,29 +134,24 @@ const _twGetAsset = path => {
     };
     return data[addon.settings.get("speed")];
   }
-
   function getToggleSetting() {
     return addon.settings.get("toggle");
   }
-
   function setTransition(speed) {
     for (let element of [flyOut, scrollBar]) {
       element.style.transitionDuration = "".concat(speed, "s");
     }
   }
-
   function removeTransition() {
     for (let element of [flyOut, scrollBar]) {
       element.style.removeProperty("transition-duration");
     }
   }
-
   function updateLockDisplay() {
     lockObject.classList.toggle("locked", flyoutLock);
     lockButton.title = flyoutLock ? msg("unlock") : msg("lock");
     lockIcon.src = _twGetAsset("/".concat(flyoutLock ? "" : "un", "lock.svg"));
   }
-
   function onmouseenter(e, speed = {}) {
     // If a mouse event was passed, only open flyout if the workspace isn't being dragged
     if (!e || e.buttons === 0 || document.querySelector(".blocklyToolboxDiv").className.includes("blocklyToolboxDelete")) {
@@ -177,19 +164,15 @@ const _twGetAsset = path => {
         removeTransition();
       }, speed * 1000);
     }
-
     closeOnMouseUp = false; // only close if the mouseup event happens outside the flyout
   }
-
   function onmouseleave(e, speed = getSpeedValue()) {
     if (flyoutLock) return;
-
     if (e && e.buttons) {
       // dragging a block or scrollbar
       closeOnMouseUp = true;
       return;
     }
-
     setTransition(speed);
     flyOut.classList.add("sa-flyoutClose");
     scrollBar.classList.add("sa-flyoutClose");
@@ -198,14 +181,11 @@ const _twGetAsset = path => {
       removeTransition();
     }, speed * 1000);
   }
-
   let didOneTimeSetup = false;
-
   function doOneTimeSetup() {
     if (didOneTimeSetup) {
       return;
     }
-
     didOneTimeSetup = true;
     addon.tab.redux.initialize();
     addon.tab.redux.addEventListener("statechanged", e => {
@@ -214,12 +194,10 @@ const _twGetAsset = path => {
         case "scratch-gui/navigation/ACTIVATE_TAB":
           // always 0, 1, 2
           const toggleSetting = getToggleSetting();
-
           if (e.detail.action.activeTabIndex === 0 && !addon.self.disabled && (toggleSetting === "hover" || toggleSetting === "cathover")) {
             onmouseleave(null, 0);
             toggle = false;
           }
-
           break;
       }
     });
@@ -229,14 +207,12 @@ const _twGetAsset = path => {
         closeOnMouseUp = false;
       }
     });
-
     if (addon.self.enabledLate && getToggleSetting() === "category") {
       Blockly.getMainWorkspace().getToolbox().selectedItem_.setSelected(false);
     }
-
     addon.self.addEventListener("disabled", () => {
-      Blockly.getMainWorkspace().getToolbox().selectedItem_.setSelected(true); // update workspace dimensions
-
+      Blockly.getMainWorkspace().getToolbox().selectedItem_.setSelected(true);
+      // update workspace dimensions
       Blockly.svgResize(Blockly.getMainWorkspace());
     });
     addon.self.addEventListener("reenabled", () => {
@@ -244,14 +220,12 @@ const _twGetAsset = path => {
         Blockly.getMainWorkspace().getToolbox().selectedItem_.setSelected(false);
         onmouseleave(null, 0);
         toggle = false;
-      } // update workspace dimensions
-
-
+      }
+      // update workspace dimensions
       Blockly.svgResize(Blockly.getMainWorkspace());
     });
     addon.settings.addEventListener("change", () => {
       if (addon.self.disabled) return;
-
       if (getToggleSetting() === "category") {
         // switching to category click mode
         // close the flyout unless it's locked
@@ -267,19 +241,17 @@ const _twGetAsset = path => {
       } else {
         onmouseleave();
         Blockly.getMainWorkspace().getToolbox().selectedItem_.setSelected(true);
-      } // update workspace dimensions
-
-
+      }
+      // update workspace dimensions
       Blockly.svgResize(Blockly.getMainWorkspace());
-    }); // category click mode
+    });
 
+    // category click mode
     const oldSetSelectedItem = Blockly.Toolbox.prototype.setSelectedItem;
-
     Blockly.Toolbox.prototype.setSelectedItem = function (item, shouldScroll = true) {
       const previousSelection = this.selectedItem_;
       oldSetSelectedItem.call(this, item, shouldScroll);
       if (addon.self.disabled || getToggleSetting() !== "category") return;
-
       if (!shouldScroll) {
         // ignore initial selection when updating the toolbox
         item.setSelected(false);
@@ -295,18 +267,14 @@ const _twGetAsset = path => {
         onmouseenter();
       }
     };
-
     const oldSelectCategoryById = Blockly.Toolbox.prototype.selectCategoryById;
-
     Blockly.Toolbox.prototype.selectCategoryById = function (...args) {
       // called after populating the toolbox
       // ignore if the palette is closed
       if (!addon.self.disabled && getToggleSetting() === "category" && !toggle) return;
       return oldSelectCategoryById.call(this, ...args);
     };
-
     const oldStepScrollAnimation = Blockly.Flyout.prototype.stepScrollAnimation;
-
     Blockly.Flyout.prototype.stepScrollAnimation = function (...args) {
       // scrolling should not be animated when opening the flyout in category click mode
       if (!scrollAnimation) {
@@ -315,33 +283,26 @@ const _twGetAsset = path => {
         scrollAnimation = true;
         return;
       }
-
       return oldStepScrollAnimation.apply(this, args);
-    }; // add flyout size to the workspace dimensions
+    };
 
-
+    // add flyout size to the workspace dimensions
     const oldGetMetrics = Blockly.WorkspaceSvg.getTopLevelWorkspaceMetrics_;
-
     Blockly.WorkspaceSvg.getTopLevelWorkspaceMetrics_ = function () {
       var _this$getToolbox, _this$getToolbox$flyo;
-
       const metrics = oldGetMetrics.call(this);
       if (addon.self.disabled || getToggleSetting() === "hover" || this.RTL) return metrics;
-
       if (((_this$getToolbox = this.getToolbox()) === null || _this$getToolbox === void 0 ? void 0 : (_this$getToolbox$flyo = _this$getToolbox.flyout_) === null || _this$getToolbox$flyo === void 0 ? void 0 : _this$getToolbox$flyo.getWidth()) === 310) {
         // columns is enabled
         return metrics;
       }
-
       return _objectSpread(_objectSpread({}, metrics), {}, {
         absoluteLeft: metrics.absoluteLeft - 250,
         viewWidth: metrics.viewWidth + 250
       });
     };
-
     if (Blockly.getMainWorkspace()) Blockly.getMainWorkspace().getMetrics = Blockly.WorkspaceSvg.getTopLevelWorkspaceMetrics_;
   }
-
   while (true) {
     flyOut = await addon.tab.waitForElement(".blocklyFlyout", {
       markAsSeen: true,
@@ -350,8 +311,9 @@ const _twGetAsset = path => {
     });
     scrollBar = document.querySelector(".blocklyFlyoutScrollbar");
     const blocksWrapper = document.querySelector('[class*="gui_blocks-wrapper_"]');
-    const injectionDiv = document.querySelector(".injectionDiv"); // Code editor left border
+    const injectionDiv = document.querySelector(".injectionDiv");
 
+    // Code editor left border
     const borderElement1 = document.createElement("div");
     borderElement1.className = "sa-flyout-border-1";
     addon.tab.displayNoneWhileDisabled(borderElement1);
@@ -359,31 +321,29 @@ const _twGetAsset = path => {
     const borderElement2 = document.createElement("div");
     borderElement2.className = "sa-flyout-border-2";
     addon.tab.displayNoneWhileDisabled(borderElement2);
-    injectionDiv.appendChild(borderElement2); // Placeholder Div
+    injectionDiv.appendChild(borderElement2);
 
+    // Placeholder Div
     if (placeHolderDiv) placeHolderDiv.remove();
     placeHolderDiv = document.createElement("div");
     blocksWrapper.appendChild(placeHolderDiv);
     placeHolderDiv.className = "sa-flyout-placeHolder";
     placeHolderDiv.style.display = "none"; // overridden by userstyle if the addon is enabled
-    // Lock image
 
+    // Lock image
     if (lockObject) lockObject.remove();
     lockObject = document.createElementNS(SVG_NS, "foreignObject");
     lockObject.setAttribute("class", "sa-lock-object");
     lockObject.style.display = "none"; // overridden by userstyle if the addon is enabled
-
     lockButton = document.createElement("button");
     lockButton.className = "sa-lock-button";
     lockIcon = document.createElement("img");
     lockIcon.alt = "";
     updateLockDisplay();
-
     lockButton.onclick = () => {
       flyoutLock = !flyoutLock;
       updateLockDisplay();
     };
-
     lockButton.appendChild(lockIcon);
     lockObject.appendChild(lockButton);
     flyOut.appendChild(lockObject);
@@ -391,29 +351,23 @@ const _twGetAsset = path => {
     toggle = false;
     const toolbox = document.querySelector(".blocklyToolboxDiv");
     const addExtensionButton = document.querySelector("[class^=gui_extension-button-container_]");
-
     for (let element of [toolbox, addExtensionButton, flyOut, scrollBar]) {
       element.onmouseenter = e => {
         const toggleSetting = getToggleSetting();
         if (!addon.self.disabled && (toggleSetting === "hover" || toggleSetting === "cathover")) onmouseenter(e);
       };
-
       element.onmouseleave = e => {
         const toggleSetting = getToggleSetting();
         if (!addon.self.disabled && (toggleSetting === "hover" || toggleSetting === "cathover")) onmouseleave(e);
       };
     }
-
     placeHolderDiv.onmouseenter = e => {
       if (!addon.self.disabled && getToggleSetting() === "hover") onmouseenter(e);
     };
-
     placeHolderDiv.onmouseleave = e => {
       if (!addon.self.disabled && getToggleSetting() === "hover") onmouseleave(e);
     };
-
     doOneTimeSetup();
-
     if (getToggleSetting() !== "hover") {
       // update workspace dimensions
       Blockly.svgResize(Blockly.getMainWorkspace());

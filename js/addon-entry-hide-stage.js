@@ -67,12 +67,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _url_loader_icon_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! url-loader!./icon.svg */ "./node_modules/url-loader/dist/cjs.js!./src/addons/addons/hide-stage/icon.svg");
 /* inserted by pull.js */
 
-
 const _twGetAsset = path => {
   if (path === "/icon.svg") return _url_loader_icon_svg__WEBPACK_IMPORTED_MODULE_0__["default"];
   throw new Error("Unknown asset: ".concat(path));
 };
-
 /* harmony default export */ __webpack_exports__["default"] = (async function ({
   addon,
   console,
@@ -83,17 +81,15 @@ const _twGetAsset = path => {
   let smallStageButton;
   let largeStageButton;
   let hideStageButton;
-
   function hideStage() {
     stageHidden = true;
     if (!bodyWrapper) return;
-    document.body.classList.add("sa-stage-hidden-outer"); // Inner class is applied to body wrapper so that it won't affect the project page.
-
+    document.body.classList.add("sa-stage-hidden-outer");
+    // Inner class is applied to body wrapper so that it won't affect the project page.
     bodyWrapper.classList.add("sa-stage-hidden");
     hideStageButton.classList.remove(addon.tab.scratchClass("stage-header_stage-button-toggled-off"));
     window.dispatchEvent(new Event("resize")); // resizes the code area and paint editor canvas
   }
-
   function unhideStage(e) {
     stageHidden = false;
     if (!bodyWrapper) return;
@@ -102,9 +98,7 @@ const _twGetAsset = path => {
     hideStageButton.classList.add(addon.tab.scratchClass("stage-header_stage-button-toggled-off"));
     window.dispatchEvent(new Event("resize")); // resizes the code area and paint editor canvas
   }
-
   addon.self.addEventListener("disabled", () => unhideStage());
-
   while (true) {
     const stageControls = await addon.tab.waitForElement("[class*='stage-header_stage-size-toggle-group_']", {
       markAsSeen: true,

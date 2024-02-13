@@ -37,7 +37,6 @@ __webpack_require__.r(__webpack_exports__);
   const vm = addon.tab.traps.vm;
   if (!vm) return;
   const oldDeleteSprite = vm.deleteSprite;
-
   const newDeleteSprite = function newDeleteSprite(...args) {
     if (addon.self.disabled) return oldDeleteSprite.apply(this, args);
     const canDelete = confirm(msg("confirm"));
@@ -49,7 +48,6 @@ __webpack_require__.r(__webpack_exports__);
     }), 100);
     return Promise.resolve();
   };
-
   vm.deleteSprite = newDeleteSprite;
 });
 

@@ -82,11 +82,9 @@ __webpack_require__.r(__webpack_exports__);
 }) {
   const vm = addon.tab.traps.vm;
   let showIconOnly = addon.settings.get("showicononly");
-
   if (addon.tab.redux.state && addon.tab.redux.state.scratchGui.stageSize.stageSize === "small") {
     document.body.classList.add("sa-clones-small");
   }
-
   document.addEventListener("click", e => {
     if (e.target.closest("[class*='stage-header_stage-button-first']")) {
       document.body.classList.add("sa-clones-small");
@@ -112,13 +110,11 @@ __webpack_require__.r(__webpack_exports__);
   const cache = Array(301).fill().map((_, i) => msg("clones", {
     cloneCount: i
   }));
-
   function doCloneChecks(force) {
-    const v = vm.runtime._cloneCounter; // performance
-
+    const v = vm.runtime._cloneCounter;
+    // performance
     if (v === lastChecked && !force) return;
     lastChecked = v;
-
     if (v === 0) {
       countContainerContainer.dataset.count = "none";
     } else if (v >= vm.runtime.runtimeOptions.maxClones) {
@@ -126,7 +122,6 @@ __webpack_require__.r(__webpack_exports__);
     } else {
       countContainerContainer.dataset.count = "";
     }
-
     if (showIconOnly) {
       count.dataset.str = v;
     } else {
@@ -134,28 +129,23 @@ __webpack_require__.r(__webpack_exports__);
         cloneCount: v
       });
     }
-
     if (v === 0) countContainerContainer.style.display = "none";else countContainerContainer.style.display = "flex";
   }
-
   addon.settings.addEventListener("change", () => {
     showIconOnly = addon.settings.get("showicononly");
     doCloneChecks(true);
   });
   const oldStep = vm.runtime._step;
-
   vm.runtime._step = function (...args) {
     const ret = oldStep.call(this, ...args);
     doCloneChecks();
     return ret;
   };
-
   while (true) {
     await addon.tab.waitForElement('[class*="controls_controls-container"]', {
       markAsSeen: true,
       reduxEvents: ["scratch-gui/mode/SET_PLAYER", "fontsLoaded/SET_FONTS_LOADED", "scratch-gui/locales/SELECT_LOCALE"]
     });
-
     if (addon.tab.editorMode === "editor") {
       addon.tab.appendToSharedSpace({
         space: "afterStopButton",

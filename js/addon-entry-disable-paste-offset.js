@@ -37,7 +37,6 @@ __webpack_require__.r(__webpack_exports__);
     detail
   }) => {
     if (addon.self.disabled) return;
-
     if (detail.action.type === "scratch-paint/clipboard/SET" || detail.action.type === "scratch-paint/clipboard/INCREMENT_PASTE_OFFSET") {
       addon.tab.redux.dispatch({
         type: "scratch-paint/clipboard/CLEAR_PASTE_OFFSET"
@@ -57,7 +56,6 @@ __webpack_require__.r(__webpack_exports__);
       type: "scratch-paint/clipboard/CLEAR_PASTE_OFFSET"
     });
   });
-
   if (addon.self.enabledLate) {
     addon.tab.redux.dispatch({
       type: "scratch-paint/clipboard/CLEAR_PASTE_OFFSET"
