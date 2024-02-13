@@ -195,7 +195,7 @@ export default [
     {
         name: (
             <FormattedMessage
-                defaultMessage="File Blocks"
+                defaultMessage="Files"
                 description="Name of Files extension"
                 id="jgFiles.jgFilesExtension.name"
             />
@@ -214,7 +214,7 @@ export default [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Website Request Blocks"
+                defaultMessage="Website Requests"
                 description="Name of Website Requests extension"
                 id="jgWebsiteRequests.jgWebsiteRequestsExtension.name"
             />
@@ -234,7 +234,7 @@ export default [
     {
         name: (
             <FormattedMessage
-                defaultMessage="JSON Blocks"
+                defaultMessage="JSON"
                 description="Name of JSON extension"
                 id="jgJSON.jgJSONExtension.name"
             />
