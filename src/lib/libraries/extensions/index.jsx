@@ -370,7 +370,7 @@ export default [
         internetConnectionRequired: true,
     },
     {
-        name: 'Physics',
+        name: 'Box2D Physics',
         extensionId: 'griffpatch',
         collaborator: 'Griffpatch',
         iconURL: griffpatchPhysicsThumb,
