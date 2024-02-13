@@ -33653,7 +33653,7 @@ __webpack_require__.r(__webpack_exports__);
   featured: true,
   internetConnectionRequired: true
 }, {
-  name: 'Physics',
+  name: 'Box2D Physics',
   extensionId: 'griffpatch',
   collaborator: 'Griffpatch',
   iconURL: _penguinmod_extensions_griffpatch_physics_png__WEBPACK_IMPORTED_MODULE_43___default.a,
