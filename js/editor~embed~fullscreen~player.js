@@ -33671,11 +33671,10 @@ __webpack_require__.r(__webpack_exports__);
   iconURL: _itch_typescratch_thumb_png__WEBPACK_IMPORTED_MODULE_46___default.a,
   insetIconURL: _itch_typescratch_icon_png__WEBPACK_IMPORTED_MODULE_45___default.a,
   description: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-    defaultMessage: "Brings all the sweet dynamic type support from TypeScript to your project!",
+    defaultMessage: "In development. Brings all the sweet dynamic type support from TypeScript to your project!",
     id: "gui.extension.typescratch.description"
   }),
-  featured: true,
-  disabled: true
+  featured: true
 }, {
   name: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
     defaultMessage: "TurboWarp Blocks",
