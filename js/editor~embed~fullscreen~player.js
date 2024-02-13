@@ -31475,7 +31475,7 @@ __webpack_require__.r(__webpack_exports__);
   featured: true
 }, {
   name: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-    defaultMessage: "File Blocks",
+    defaultMessage: "Files",
     id: "jgFiles.jgFilesExtension.name"
   }),
   extensionId: 'jgFiles',
@@ -31487,7 +31487,7 @@ __webpack_require__.r(__webpack_exports__);
   featured: true
 }, {
   name: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-    defaultMessage: "Website Request Blocks",
+    defaultMessage: "Website Requests",
     id: "jgWebsiteRequests.jgWebsiteRequestsExtension.name"
   }),
   extensionId: 'jgWebsiteRequests',
@@ -31500,7 +31500,7 @@ __webpack_require__.r(__webpack_exports__);
   internetConnectionRequired: true
 }, {
   name: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-    defaultMessage: "JSON Blocks",
+    defaultMessage: "JSON",
     id: "jgJSON.jgJSONExtension.name"
   }),
   extensionId: 'jgJSON',
