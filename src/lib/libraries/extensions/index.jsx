@@ -393,13 +393,12 @@ export default [
         insetIconURL: typescratchIcon,
         description: (
             <FormattedMessage
-                defaultMessage="Brings all the sweet dynamic type support from TypeScript to your project!"
+                defaultMessage="In development. Brings all the sweet dynamic type support from TypeScript to your project!"
                 description="Description for the 'TypeScratch' extension"
                 id="gui.extension.typescratch.description"
             />
         ),
         featured: true,
-        disabled: true
     },
     {
         name: (
